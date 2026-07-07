@@ -2,6 +2,7 @@ using API.ProjetoCursosIdioma.Data;
 using API.ProjetoCursosIdioma.Mappings;
 using Microsoft.EntityFrameworkCore;
 using API.ProjetoCursosIdioma.Repositories;
+using API.ProjetoCursosIdioma.Models.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<PCI_DbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("PCI_ConnectionString")));
 
 builder.Services.AddScoped<API.ProjetoCursosIdioma.Repositories.AlunoRepFolder.IAlunoRepository, API.ProjetoCursosIdioma.Repositories.AlunoRepFolder.SQLAlunoRepository>();
+builder.Services.AddScoped<API.ProjetoCursosIdioma.Repositories.TurmaRepFolder.ITurmaRepository, API.ProjetoCursosIdioma.Repositories.TurmaRepFolder.SQLTurmaRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
