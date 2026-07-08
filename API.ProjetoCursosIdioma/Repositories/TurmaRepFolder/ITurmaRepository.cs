@@ -11,7 +11,7 @@ namespace API.ProjetoCursosIdioma.Repositories.TurmaRepFolder
         Task<Turma> CreateAsync(Turma turma);
 
         Task<Turma?> UpdateAsync(Guid Id, Turma turma);
-        //Identificador //Propriedades do Domain Model que queremos atualizar
+
         Task<Turma?> DeleteAsync(Guid Id);
     }
 }

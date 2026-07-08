@@ -31,7 +31,7 @@ namespace API.ProjetoCursosIdioma.Controllers
         {
             var turmasDomain = await turmaRepository.GetAllAsync();
 
-            return Ok(mapper.Map<List<TurmaDto>>(turmasDomain));//preencher Dto
+            return Ok(mapper.Map<List<TurmaDto>>(turmasDomain));
         }
 
         // GET BY ID Turmas
@@ -78,8 +78,8 @@ namespace API.ProjetoCursosIdioma.Controllers
             return Ok(turmaDto);
         }
 
-        // DELETE Alunos
-        // DELETE:/api/alunos/{Id}
+        // DELETE Turmas
+        // DELETE:/api/turmas/{Id}
         [HttpDelete]
         [Route("{Id:Guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid Id)

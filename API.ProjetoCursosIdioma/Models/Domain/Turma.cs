@@ -1,4 +1,6 @@
-﻿namespace API.ProjetoCursosIdioma.Models.Domain
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace API.ProjetoCursosIdioma.Models.Domain
 {
     public class Turma
     {
@@ -7,9 +9,9 @@
 
         public string Name { get; set; }
 
-        public int Numero { get; set; }
+        public string NumeroTurma { get; set; }
 
-        public string AnoLetivo { get; set; }
+        public int AnoLetivo { get; set; }
 
         //Nav Properties
     }

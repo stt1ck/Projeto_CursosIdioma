@@ -4,6 +4,7 @@ using API.ProjetoCursosIdioma.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.ProjetoCursosIdioma.Migrations
 {
     [DbContext(typeof(PCI_DbContext))]
-    partial class PCI_DbContextModelSnapshot : ModelSnapshot
+    [Migration("20260708132737_Another Prop Type Fix")]
+    partial class AnotherPropTypeFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,8 +54,8 @@ namespace API.ProjetoCursosIdioma.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("AnoLetivo")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("AnoLetivo")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()

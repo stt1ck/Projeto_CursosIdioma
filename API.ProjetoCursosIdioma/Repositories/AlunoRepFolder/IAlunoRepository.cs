@@ -7,6 +7,7 @@ namespace API.ProjetoCursosIdioma.Repositories.AlunoRepFolder
         Task<List<Aluno>> GetAllAsync();
 
         Task<Aluno?> GetByIdAsync(Guid Id);
+
         Task<Aluno> CreateAsync(Aluno aluno);
 
         Task<Aluno?> UpdateAsync(Guid Id, Aluno aluno);

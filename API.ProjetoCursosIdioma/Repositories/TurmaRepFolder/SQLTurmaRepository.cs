@@ -54,6 +54,7 @@ namespace API.ProjetoCursosIdioma.Repositories.TurmaRepFolder
             }
 
             existingTurma.Name = turma.Name;
+            existingTurma.NumeroTurma = turma.NumeroTurma;
             existingTurma.AnoLetivo = turma.AnoLetivo;
 
             await _dbContext.SaveChangesAsync();
