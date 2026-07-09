@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using API.ProjetoCursosIdioma.Models.Domain;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.ProjetoCursosIdioma.Models.Dto.TurmaDto
 {
@@ -9,5 +10,8 @@ namespace API.ProjetoCursosIdioma.Models.Dto.TurmaDto
         public string NumeroTurma { get; set; }
 
         public int AnoLetivo { get; set; }
+
+        public string Nivel { get; set; }
+
     }
 }

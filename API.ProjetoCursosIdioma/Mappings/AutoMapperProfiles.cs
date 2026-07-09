@@ -1,5 +1,6 @@
 ﻿using API.ProjetoCursosIdioma.Models.Domain;
 using API.ProjetoCursosIdioma.Models.Dto.AlunoDto_s;
+using API.ProjetoCursosIdioma.Models.Dto.NivelTurmaDto_s;
 using API.ProjetoCursosIdioma.Models.Dto.TurmaDto;
 using AutoMapper;
 
@@ -18,6 +19,12 @@ namespace API.ProjetoCursosIdioma.Mappings
             CreateMap<Turma, TurmaDto>().ReverseMap();
             CreateMap<Turma, TurmaAddRequestDto>().ReverseMap();
             CreateMap<Turma, TurmaUpdateRequestDto>().ReverseMap();
+            CreateMap<Turma, TurmaDto>()
+                .ForMember(dest => dest.Nivel,
+                    opt => opt.MapFrom(src => src.NivelTurma.Name));
+
+            //Auto Mapping NivelTurma
+            CreateMap<NivelTurma, NivelTurmaDto>().ReverseMap();
         }
     }
 }

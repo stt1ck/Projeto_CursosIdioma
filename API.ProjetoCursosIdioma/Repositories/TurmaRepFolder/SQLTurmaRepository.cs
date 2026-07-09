@@ -36,12 +36,29 @@ namespace API.ProjetoCursosIdioma.Repositories.TurmaRepFolder
 
         public async Task<List<Turma>> GetAllAsync()
         {
-            return await _dbContext.Turmas.ToListAsync();
+            return await _dbContext.Turmas
+                .Include("NivelTurma")
+                .ToListAsync();
         }
 
         public async Task<Turma?> GetByIdAsync(Guid Id)
         {
-            return await _dbContext.Turmas.FirstOrDefaultAsync(t => t.Id == Id);
+            return await _dbContext.Turmas
+                .Include("NivelTurma")
+                .FirstOrDefaultAsync(t => t.Id == Id);
+        }
+
+        public async Task<bool> NivelTurmaExistAsync(Guid NivelTurmaId)
+        {
+            return await _dbContext.NivelTurmas.AnyAsync(n => n.Id == NivelTurmaId);
+        }
+
+        public async Task<bool> TurmaExistAsync(string Name, Guid NivelTurmaId, int AnoLetivo, string NumeroTurma)
+        {
+            return await _dbContext.Turmas.AnyAsync(t => t.Name == Name &&
+                                                    t.NivelTurmaId == NivelTurmaId &&
+                                                    t.AnoLetivo == AnoLetivo &&
+                                                    t.NumeroTurma == NumeroTurma);
         }
 
         public async Task<Turma?> UpdateAsync(Guid Id, Turma turma)
@@ -56,9 +73,12 @@ namespace API.ProjetoCursosIdioma.Repositories.TurmaRepFolder
             existingTurma.Name = turma.Name;
             existingTurma.NumeroTurma = turma.NumeroTurma;
             existingTurma.AnoLetivo = turma.AnoLetivo;
+            existingTurma.NivelTurmaId = turma.NivelTurmaId;
 
             await _dbContext.SaveChangesAsync();
             return existingTurma;
         }
+
+
     }
 }

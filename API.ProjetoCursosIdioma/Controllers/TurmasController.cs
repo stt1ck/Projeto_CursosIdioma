@@ -5,6 +5,7 @@ using API.ProjetoCursosIdioma.Repositories.TurmaRepFolder;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.ProjetoCursosIdioma.Controllers
 {
@@ -53,12 +54,20 @@ namespace API.ProjetoCursosIdioma.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TurmaAddRequestDto turmaAddRequestDto)
         {
+            //Checagem se nível existe
+            var existingNivel = await turmaRepository.NivelTurmaExistAsync(turmaAddRequestDto.NivelTurmaId);
+            if(existingNivel == false) { return NotFound("Nível não existe"); }
+
+            //Checagem se turma idêntica já existe
+            var existingTurma = await turmaRepository.TurmaExistAsync(turmaAddRequestDto.Name, turmaAddRequestDto.NivelTurmaId, turmaAddRequestDto.AnoLetivo, turmaAddRequestDto.NumeroTurma);
+            if(existingTurma == true) { return BadRequest("Turma com mesmo 'nome', 'nível', 'ano letivo' e 'número' já existe"); }
+
             var turmaDomain = mapper.Map<Turma>(turmaAddRequestDto);
 
             turmaDomain = await turmaRepository.CreateAsync(turmaDomain);
 
             var turmaDto = mapper.Map<TurmaDto>(turmaDomain);
-
+            
             return CreatedAtAction(nameof(GetById), new { id = turmaDomain.Id }, turmaDto);
         }
 

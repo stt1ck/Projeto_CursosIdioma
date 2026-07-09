@@ -45,6 +45,38 @@ namespace API.ProjetoCursosIdioma.Migrations
                     b.ToTable("Alunos");
                 });
 
+            modelBuilder.Entity("API.ProjetoCursosIdioma.Models.Domain.NivelTurma", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NivelTurmas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("20ef9ed7-a2de-4b12-afbc-d7e95a2bdf1e"),
+                            Name = "Básico"
+                        },
+                        new
+                        {
+                            Id = new Guid("ab10d5c3-0dac-4087-a6ec-50871b732e96"),
+                            Name = "Intermediário"
+                        },
+                        new
+                        {
+                            Id = new Guid("9fd3436d-c6e3-4c54-b2ae-6769659c1644"),
+                            Name = "Avançado"
+                        });
+                });
+
             modelBuilder.Entity("API.ProjetoCursosIdioma.Models.Domain.Turma", b =>
                 {
                     b.Property<Guid>("Id")
@@ -56,15 +88,34 @@ namespace API.ProjetoCursosIdioma.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("NivelTurmaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NumeroTurma")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("NivelTurmaId");
+
+                    b.HasIndex("Name", "NivelTurmaId", "AnoLetivo", "NumeroTurma")
+                        .IsUnique();
+
                     b.ToTable("Turmas");
+                });
+
+            modelBuilder.Entity("API.ProjetoCursosIdioma.Models.Domain.Turma", b =>
+                {
+                    b.HasOne("API.ProjetoCursosIdioma.Models.Domain.NivelTurma", "NivelTurma")
+                        .WithMany()
+                        .HasForeignKey("NivelTurmaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NivelTurma");
                 });
 #pragma warning restore 612, 618
         }

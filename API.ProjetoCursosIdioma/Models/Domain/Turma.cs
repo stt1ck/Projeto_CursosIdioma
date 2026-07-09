@@ -14,5 +14,8 @@ namespace API.ProjetoCursosIdioma.Models.Domain
         public int AnoLetivo { get; set; }
 
         //Nav Properties
+        public Guid NivelTurmaId { get; set; }
+
+        public NivelTurma NivelTurma { get; set; }
     }
 }
