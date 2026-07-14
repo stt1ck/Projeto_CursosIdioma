@@ -13,25 +13,13 @@ namespace API.ProjetoCursosIdioma.Repositories.TurmaRepFolder
             this._dbContext = dbContext;
         }
 
+        //CRUD
+
         public async Task<Turma> CreateAsync(Turma turma)
         {
             await _dbContext.Turmas.AddAsync(turma);
             await _dbContext.SaveChangesAsync();
             return turma;
-        }
-
-        public async Task<Turma?> DeleteAsync(Guid Id)
-        {
-            var existingTurma = await _dbContext.Turmas.FirstOrDefaultAsync(t => t.Id == Id);
-
-            if (existingTurma == null)
-            {
-                return null;
-            }
-
-            _dbContext.Turmas.Remove(existingTurma);
-            await _dbContext.SaveChangesAsync();
-            return existingTurma;
         }
 
         public async Task<List<Turma>> GetAllAsync()
@@ -46,19 +34,6 @@ namespace API.ProjetoCursosIdioma.Repositories.TurmaRepFolder
             return await _dbContext.Turmas
                 .Include("NivelTurma")
                 .FirstOrDefaultAsync(t => t.Id == Id);
-        }
-
-        public async Task<bool> NivelTurmaExistAsync(Guid NivelTurmaId)
-        {
-            return await _dbContext.NivelTurmas.AnyAsync(n => n.Id == NivelTurmaId);
-        }
-
-        public async Task<bool> TurmaExistAsync(string Name, Guid NivelTurmaId, int AnoLetivo, string NumeroTurma)
-        {
-            return await _dbContext.Turmas.AnyAsync(t => t.Name == Name &&
-                                                    t.NivelTurmaId == NivelTurmaId &&
-                                                    t.AnoLetivo == AnoLetivo &&
-                                                    t.NumeroTurma == NumeroTurma);
         }
 
         public async Task<Turma?> UpdateAsync(Guid Id, Turma turma)
@@ -79,6 +54,34 @@ namespace API.ProjetoCursosIdioma.Repositories.TurmaRepFolder
             return existingTurma;
         }
 
+        public async Task<Turma?> DeleteAsync(Guid Id)
+        {
+            var existingTurma = await _dbContext.Turmas.FirstOrDefaultAsync(t => t.Id == Id);
+
+            if (existingTurma == null)
+            {
+                return null;
+            }
+
+            _dbContext.Turmas.Remove(existingTurma);
+            await _dbContext.SaveChangesAsync();
+            return existingTurma;
+        }
+
+        //Validation
+
+        public async Task<bool> NivelTurmaExistAsync(Guid NivelTurmaId)
+        {
+            return await _dbContext.NivelTurmas.AnyAsync(n => n.Id == NivelTurmaId);
+        }
+
+        public async Task<bool> TurmaExistAsync(string Name, Guid NivelTurmaId, int AnoLetivo, string NumeroTurma)
+        {
+            return await _dbContext.Turmas.AnyAsync(t => t.Name == Name &&
+                                                    t.NivelTurmaId == NivelTurmaId &&
+                                                    t.AnoLetivo == AnoLetivo &&
+                                                    t.NumeroTurma == NumeroTurma);
+        }
 
     }
 }

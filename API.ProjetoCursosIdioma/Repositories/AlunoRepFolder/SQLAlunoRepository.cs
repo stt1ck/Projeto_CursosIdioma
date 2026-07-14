@@ -13,22 +13,13 @@ namespace API.ProjetoCursosIdioma.Repositories.AlunoRepFolder
             this._DbContext = dbContext;
         }
 
+        //CRUD
+
         public async Task<Aluno> CreateAsync(Aluno aluno)
         {
             await _DbContext.Alunos.AddAsync(aluno);
             await _DbContext.SaveChangesAsync();
             return aluno;
-        }
-
-        public async Task<Aluno?> DeleteAsync(Guid Id)
-        {
-            var existingAluno = await _DbContext.Alunos.FirstOrDefaultAsync(a =>  a.Id == Id);
-
-            if(existingAluno == null) { return null; }
-
-            _DbContext.Alunos.Remove(existingAluno);
-            await _DbContext.SaveChangesAsync();
-            return existingAluno;
         }
 
         public async Task<List<Aluno>> GetAllAsync()
@@ -51,6 +42,29 @@ namespace API.ProjetoCursosIdioma.Repositories.AlunoRepFolder
 
             await _DbContext.SaveChangesAsync();
             return existingAluno;
+        }
+
+        public async Task<Aluno?> DeleteAsync(Guid Id)
+        {
+            var existingAluno = await _DbContext.Alunos.FirstOrDefaultAsync(a => a.Id == Id);
+
+            if (existingAluno == null) { return null; }
+
+            _DbContext.Alunos.Remove(existingAluno);
+            await _DbContext.SaveChangesAsync();
+            return existingAluno;
+        }
+
+        //Validation
+
+        public async Task<bool> EmailAlreadyUsedAsync(string email)
+        {
+            return await _DbContext.Alunos.AnyAsync(a => a.Email == email);
+        }
+
+        public async Task<bool> CPFAlreadyUsedAsync(string cpf)
+        {
+            return await _DbContext.Alunos.AnyAsync(a => a.Cpf == cpf);
         }
     }
 }

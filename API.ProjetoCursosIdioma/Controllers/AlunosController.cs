@@ -54,13 +54,23 @@ namespace API.ProjetoCursosIdioma.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AlunoAddRequestDto alunoAddRequestDto)
         {
-            var alunoDomain = mapper.Map<Aluno>(alunoAddRequestDto);
+            if (ModelState.IsValid)
+            {
+                var alreadyUsedEmail = await alunoRepository.EmailAlreadyUsedAsync(alunoAddRequestDto.Email);
+                if (alreadyUsedEmail == true) { return BadRequest("E-mail já cadastrado"); }
 
-            alunoDomain = await alunoRepository.CreateAsync(alunoDomain);
+                var alreadyUsedCpf = await alunoRepository.CPFAlreadyUsedAsync(alunoAddRequestDto.Cpf);
+                if (alreadyUsedCpf == true) { return BadRequest("Cpf já cadastrado"); }
 
-            var alunoDto = mapper.Map<AlunoDto>(alunoDomain);
+                var alunoDomain = mapper.Map<Aluno>(alunoAddRequestDto);
 
-            return CreatedAtAction(nameof(GetById), new { id = alunoDomain.Id }, alunoDto);
+                alunoDomain = await alunoRepository.CreateAsync(alunoDomain);
+
+                var alunoDto = mapper.Map<AlunoDto>(alunoDomain);
+
+                return CreatedAtAction(nameof(GetById), new { id = alunoDomain.Id }, alunoDto);
+            }
+            else { return BadRequest(ModelState); }
         }
 
         // UPDATE Alunos
@@ -69,14 +79,18 @@ namespace API.ProjetoCursosIdioma.Controllers
         [Route("{Id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid Id, [FromBody] AlunoUpdateRequestDto alunoUpdateRequestDto)
         {
-            var alunoDomain = mapper.Map<Aluno>(alunoUpdateRequestDto);
+            if(ModelState.IsValid)
+            {
+                var alunoDomain = mapper.Map<Aluno>(alunoUpdateRequestDto);
 
-            alunoDomain = await alunoRepository.UpdateAsync(Id, alunoDomain);
-            if (alunoDomain == null) {  return NotFound(); }
+                alunoDomain = await alunoRepository.UpdateAsync(Id, alunoDomain);
+                if (alunoDomain == null) { return NotFound(); }
 
-            var alunoDto = mapper.Map<AlunoDto>(alunoDomain);
+                var alunoDto = mapper.Map<AlunoDto>(alunoDomain);
 
-            return Ok(alunoDto);
+                return Ok(alunoDto);
+            }
+            else { return BadRequest(ModelState); }
         }
 
         // DELETE Alunos

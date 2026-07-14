@@ -13,5 +13,9 @@ namespace API.ProjetoCursosIdioma.Repositories.AlunoRepFolder
         Task<Aluno?> UpdateAsync(Guid Id, Aluno aluno);
 
         Task<Aluno?> DeleteAsync(Guid Id);
+
+        Task<bool> EmailAlreadyUsedAsync(string email);
+
+        Task<bool> CPFAlreadyUsedAsync(string cpf);
     }
 }

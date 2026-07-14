@@ -54,21 +54,27 @@ namespace API.ProjetoCursosIdioma.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TurmaAddRequestDto turmaAddRequestDto)
         {
-            //Checagem se nível existe
-            var existingNivel = await turmaRepository.NivelTurmaExistAsync(turmaAddRequestDto.NivelTurmaId);
-            if(existingNivel == false) { return NotFound("Nível não existe"); }
+            if (ModelState.IsValid)
+            {
+                //Checagem se nível existe
+                var existingNivel = await turmaRepository.NivelTurmaExistAsync(turmaAddRequestDto.NivelTurmaId);
+                if (existingNivel == false) { return NotFound("Nível não existe"); }
 
-            //Checagem se turma idêntica já existe
-            var existingTurma = await turmaRepository.TurmaExistAsync(turmaAddRequestDto.Name, turmaAddRequestDto.NivelTurmaId, turmaAddRequestDto.AnoLetivo, turmaAddRequestDto.NumeroTurma);
-            if(existingTurma == true) { return BadRequest("Turma com mesmo 'nome', 'nível', 'ano letivo' e 'número' já existe"); }
+                //Checagem se turma idêntica já existe
+                var existingTurma = await turmaRepository.TurmaExistAsync(turmaAddRequestDto.Name, turmaAddRequestDto.NivelTurmaId, turmaAddRequestDto.AnoLetivo, turmaAddRequestDto.NumeroTurma);
+                if (existingTurma == true) { return BadRequest("Turma com mesmo 'nome', 'nível', 'ano letivo' e 'número' já existe"); }
 
-            var turmaDomain = mapper.Map<Turma>(turmaAddRequestDto);
+                var turmaDomain = mapper.Map<Turma>(turmaAddRequestDto);
 
-            turmaDomain = await turmaRepository.CreateAsync(turmaDomain);
+                turmaDomain = await turmaRepository.CreateAsync(turmaDomain);
 
-            var turmaDto = mapper.Map<TurmaDto>(turmaDomain);
+                var turmaDto = mapper.Map<TurmaDto>(turmaDomain);
+
+                return CreatedAtAction(nameof(GetById), new { id = turmaDomain.Id }, turmaDto);
+            }
+            else { return BadRequest(ModelState); }
             
-            return CreatedAtAction(nameof(GetById), new { id = turmaDomain.Id }, turmaDto);
+            
         }
 
         // UPDATE Turmas

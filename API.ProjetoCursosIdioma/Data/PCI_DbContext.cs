@@ -28,6 +28,21 @@ namespace API.ProjetoCursosIdioma.Data
                 })
                 .IsUnique();
 
+            modelBuilder.Entity<Aluno>()
+                .HasIndex(a => new { a.Email })
+                .IsUnique();
+
+            modelBuilder.Entity<Aluno>()
+                .Property(aluno => aluno.Cpf)
+                .IsRequired()
+                .HasMaxLength(11)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<Aluno>().HasIndex(aluno => aluno.Cpf)
+                .IsUnique();
+
+
+            //Seeding Níveis
             var nivelTurmas = new List<NivelTurma>()
             {
                 new NivelTurma
