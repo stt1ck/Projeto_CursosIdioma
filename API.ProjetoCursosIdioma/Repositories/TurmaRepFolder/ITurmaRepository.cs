@@ -21,7 +21,13 @@ namespace API.ProjetoCursosIdioma.Repositories.TurmaRepFolder
             string Name,
             Guid NivelTurmaId,
             int AnoLetivo,
-            string NumeroTurma
+            string NumeroTurma,
+            Guid? IdIgnorado = null
             );
+
+        //Relacionamentos
+        Task<List<Turma>> GetByIdsAsync(List<Guid> turmaIds);
+
+        Task<int> CountAlunosAsync(Guid turmaId);
     }
 }

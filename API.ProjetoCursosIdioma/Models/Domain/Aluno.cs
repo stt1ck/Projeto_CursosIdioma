@@ -11,8 +11,6 @@
 
         public string Email { get; set; }
 
-        //Nav Properties
-        //public Turma NomeTurma { get; set; }
-        //public Turma AnoLetivoTurma { get; set; }
+        public ICollection<AlunoTurma> AlunoTurmas { get; set; } = new List<AlunoTurma>();
     }
 }

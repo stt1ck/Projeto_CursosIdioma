@@ -22,14 +22,38 @@ namespace API.ProjetoCursosIdioma.Repositories.AlunoRepFolder
             return aluno;
         }
 
+        public  async Task<bool> AddTurmaAsync(Guid alunoId, Guid turmaId)
+        {
+            var existingTurmaAluno = await _DbContext.AlunoTurmas.AnyAsync(at => at.AlunoId == alunoId && at.TurmaId == turmaId);
+            if (existingTurmaAluno) { return false; }
+
+            var newAlunoTurma = new AlunoTurma
+            {
+                AlunoId = alunoId,
+                TurmaId = turmaId
+            };
+
+            await _DbContext.AlunoTurmas.AddAsync(newAlunoTurma);
+            await _DbContext.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<List<Aluno>> GetAllAsync()
         {
-            return await _DbContext.Alunos.ToListAsync();
+            return await _DbContext.Alunos
+                .Include(aluno => aluno.AlunoTurmas)
+                .ThenInclude(alunoTurma => alunoTurma.Turma)
+                .ThenInclude(turma => turma.NivelTurma)
+                .ToListAsync();
         }
 
         public async Task<Aluno?> GetByIdAsync(Guid Id)
         {
-            return await _DbContext.Alunos.FirstOrDefaultAsync(a => a.Id == Id);
+            return await _DbContext.Alunos
+                .Include(aluno => aluno.AlunoTurmas)
+                .ThenInclude(alunoTurma => alunoTurma.Turma)
+                .ThenInclude(turma => turma.NivelTurma)
+                .FirstOrDefaultAsync(aluno => aluno.Id == Id);
         }
 
         public async Task<Aluno?> UpdateAsync(Guid Id, Aluno aluno)
@@ -55,11 +79,30 @@ namespace API.ProjetoCursosIdioma.Repositories.AlunoRepFolder
             return existingAluno;
         }
 
+        public async Task<bool> DeleteTurmaAsync(Guid alunoId, Guid turmaId)
+        {
+            var alunoTurma = await _DbContext.AlunoTurmas
+                .FirstOrDefaultAsync(at => at.AlunoId == alunoId && at.TurmaId == turmaId);
+            if (alunoTurma == null) { return false; }
+
+            _DbContext.AlunoTurmas.Remove(alunoTurma);
+            await _DbContext.SaveChangesAsync();
+            return true;
+        }
+
         //Validation
 
         public async Task<bool> EmailAlreadyUsedAsync(string email)
         {
             return await _DbContext.Alunos.AnyAsync(a => a.Email == email);
+        }
+
+        public async Task<bool> EmailAlreadyUsedByAnotherAlunoAsync(string email, Guid alunoId)
+        {
+            return await _DbContext.Alunos
+                .AnyAsync(aluno =>
+                    aluno.Email == email &&
+                    aluno.Id != alunoId);
         }
 
         public async Task<bool> CPFAlreadyUsedAsync(string cpf)

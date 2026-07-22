@@ -10,9 +10,7 @@ namespace API.ProjetoCursosIdioma.Data
         public DbSet<Aluno> Alunos { get; set; }
         public DbSet<Turma> Turmas { get; set; }
         public DbSet<NivelTurma> NivelTurmas { get; set; }
-
-        //Seedar os Alunos e Turmas
-
+        public DbSet<AlunoTurma> AlunoTurmas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +39,24 @@ namespace API.ProjetoCursosIdioma.Data
             modelBuilder.Entity<Aluno>().HasIndex(aluno => aluno.Cpf)
                 .IsUnique();
 
+            modelBuilder.Entity<AlunoTurma>(entity =>
+            {
+                entity.HasKey(at => new
+                {
+                    at.AlunoId,
+                    at.TurmaId
+                });
+
+                entity.HasOne(at => at.Aluno)
+                    .WithMany(a => a.AlunoTurmas)
+                    .HasForeignKey(at => at.AlunoId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(at => at.Turma)
+                    .WithMany(t => t.AlunoTurmas)
+                    .HasForeignKey(at => at.TurmaId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
 
             //Seeding Níveis
             var nivelTurmas = new List<NivelTurma>()
@@ -63,15 +79,6 @@ namespace API.ProjetoCursosIdioma.Data
             };
 
             modelBuilder.Entity<NivelTurma>().HasData(nivelTurmas);
-
-            /*var turmas = new List<Turma>() seed this later
-            {
-                new Turma
-                {
-                    Id = Guid.Parse("DE0544DB-A409-41F8-A7DB-4150F54000A1"),
-                    Name = "Português"
-                }
-            };*/
         }
     }
 }

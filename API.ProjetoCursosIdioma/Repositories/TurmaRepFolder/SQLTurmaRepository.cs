@@ -75,13 +75,29 @@ namespace API.ProjetoCursosIdioma.Repositories.TurmaRepFolder
             return await _dbContext.NivelTurmas.AnyAsync(n => n.Id == NivelTurmaId);
         }
 
-        public async Task<bool> TurmaExistAsync(string Name, Guid NivelTurmaId, int AnoLetivo, string NumeroTurma)
+        public async Task<bool> TurmaExistAsync(string Name, Guid NivelTurmaId, int AnoLetivo, string NumeroTurma, Guid? IdIgnorado = null)
         {
             return await _dbContext.Turmas.AnyAsync(t => t.Name == Name &&
                                                     t.NivelTurmaId == NivelTurmaId &&
                                                     t.AnoLetivo == AnoLetivo &&
-                                                    t.NumeroTurma == NumeroTurma);
+                                                    t.NumeroTurma == NumeroTurma&&
+                                                    (!IdIgnorado.HasValue || t.Id != IdIgnorado.Value));
         }
 
+        //Relationships
+
+        public async Task<List<Turma>> GetByIdsAsync(List<Guid> turmaIds)
+        {
+            return await _dbContext.Turmas
+            .Where(turma => turmaIds.Contains(turma.Id))
+            .ToListAsync();
+        }
+
+        public async Task<int> CountAlunosAsync(Guid turmaId)
+        {
+            return await _dbContext.AlunoTurmas
+                .CountAsync(alunoTurma =>
+                alunoTurma.TurmaId == turmaId);
+        }   
     }
 }
