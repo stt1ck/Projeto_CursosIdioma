@@ -1,8 +1,12 @@
-﻿using API.ProjetoCursosIdioma.Data;
-using API.ProjetoCursosIdioma.Models.Domain;
-using API.ProjetoCursosIdioma.Models.Dto.TurmaDto;
-using API.ProjetoCursosIdioma.Repositories.TurmaRepFolder;
+﻿using Application.ProjetoCursosIdioma.Common;
+using Application.ProjetoCursosIdioma.Dto.TurmaDtos;
+using Application.ProjetoCursosIdioma.Interfaces;
+using Application.ProjetoCursosIdioma.Services;
 using AutoMapper;
+using Domain.ProjetoCursosIdioma.Entities;
+using Domain.ProjetoCursosIdioma.Repositories;
+using Infrastructure.ProjetoCursosIdioma.Data;
+using Infrastructure.ProjetoCursosIdioma.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,15 +18,29 @@ namespace API.ProjetoCursosIdioma.Controllers
     public class TurmasController : ControllerBase
     {
         //Injeções
-        //Injeção e nomeação do DbContext
-        private readonly PCI_DbContext _dbContext;
-        private readonly ITurmaRepository turmaRepository;
-        private readonly IMapper mapper;
-        public TurmasController(PCI_DbContext dbContext, ITurmaRepository turmaRepository, IMapper mapper)
+        //Injeção e nomeação do Service
+        private readonly ITurmaService turmaService;
+        public TurmasController(ITurmaService turmaService)
         {
-            this._dbContext = dbContext;
-            this.turmaRepository = turmaRepository;
-            this.mapper = mapper;
+            this.turmaService = turmaService;
+        }
+
+        // Métodos
+        //Conversão erros Service para Https
+        private IActionResult errorMapping<T>(Resultado<T> resultado)
+        {
+            return resultado.errorType switch
+            {
+                errorType.notFound => NotFound(resultado.Mensagem),
+
+                errorType.conflict => Conflict(resultado.Mensagem),
+
+                errorType.validation => BadRequest(resultado.Mensagem),
+
+                errorType.Interno => StatusCode(StatusCodes.Status500InternalServerError, resultado.Mensagem),
+
+                _ => StatusCode(StatusCodes.Status500InternalServerError, "Erro inesperado.")
+            };
         }
 
         //GET ALL Turmas
@@ -30,9 +48,9 @@ namespace API.ProjetoCursosIdioma.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var turmasDomain = await turmaRepository.GetAllAsync();
+            var turmas = await turmaService.GetAllAsync();
 
-            return Ok(mapper.Map<List<TurmaDto>>(turmasDomain));
+            return Ok(turmas);
         }
 
         // GET BY ID Turmas
@@ -42,11 +60,10 @@ namespace API.ProjetoCursosIdioma.Controllers
         [Route("{Id:Guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid Id)
         {
-            var turmaDomain = await turmaRepository.GetByIdAsync(Id);
+            var resultado = await turmaService.GetByIdAsync(Id);
+            if (!resultado.success) { return errorMapping(resultado); }
 
-            if (turmaDomain == null) { return NotFound(); }
-
-            return Ok(mapper.Map<TurmaDto>(turmaDomain));
+            return Ok(resultado.Dados);
         }
 
         // POST Turmas
@@ -54,26 +71,10 @@ namespace API.ProjetoCursosIdioma.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TurmaAddRequestDto turmaAddRequestDto)
         {
-            if (ModelState.IsValid)
-            {
-                var existingNivel = await turmaRepository.NivelTurmaExistAsync(turmaAddRequestDto.NivelTurmaId);
-                if (existingNivel == false) { return NotFound("Nível não existe"); }
+            var resultado = await turmaService.CreateAsync(turmaAddRequestDto);
+            if (!resultado.success) { return errorMapping(resultado); }
 
-                var existingTurma = await turmaRepository.TurmaExistAsync(turmaAddRequestDto.Name, turmaAddRequestDto.NivelTurmaId, turmaAddRequestDto.AnoLetivo, turmaAddRequestDto.NumeroTurma);
-                if (existingTurma == true) { return BadRequest("Turma com mesmo 'nome', 'nível', 'ano letivo' e 'número' já existe"); }
-
-                var turmaDomain = mapper.Map<Turma>(turmaAddRequestDto);
-
-                await turmaRepository.CreateAsync(turmaDomain);
-                var createdTurma = await turmaRepository.GetByIdAsync(turmaDomain.Id);
-
-                var turmaDto = mapper.Map<TurmaDto>(createdTurma);
-
-                return CreatedAtAction(nameof(GetById), new { id = turmaDomain.Id }, turmaDto);
-            }
-            else { return BadRequest(ModelState); }
-            
-            
+            return CreatedAtAction(nameof(GetById), new { id = resultado.Dados!.Id }, resultado.Dados);
         }
 
         // UPDATE Turmas
@@ -82,29 +83,10 @@ namespace API.ProjetoCursosIdioma.Controllers
         [Route("{Id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid Id, [FromBody] TurmaUpdateRequestDto turmaUpdateRequestDto)
         {
-            var existingTurma = await turmaRepository.GetByIdAsync(Id);
-            if (existingTurma == null) { return NotFound("Turma não encontrada."); }
+            var resultado = await turmaService.UpdateAsync(Id, turmaUpdateRequestDto);
+            if (!resultado.success) { return errorMapping(resultado); }
 
-            var existingNivel = await turmaRepository.NivelTurmaExistAsync(turmaUpdateRequestDto.NivelTurmaId);
-            if (!existingNivel) { return NotFound("Nível não existe."); }
-
-            var turmaDuplicated = await turmaRepository.TurmaExistAsync(
-                    turmaUpdateRequestDto.Name,
-                    turmaUpdateRequestDto.NivelTurmaId,
-                    turmaUpdateRequestDto.AnoLetivo,
-                    turmaUpdateRequestDto.NumeroTurma,
-                    Id);
-            if (turmaDuplicated) { return Conflict("Outra turma com o mesmo nome, nível, ano letivo e número já existe."); }
-
-            var turmaDomain = mapper.Map<Turma>(turmaUpdateRequestDto);
-
-            var updatedTurma = await turmaRepository.UpdateAsync(Id, turmaDomain);
-            if (updatedTurma == null) { return NotFound("Turma não encontrada."); }
-
-            var reloadTurma = await turmaRepository.GetByIdAsync(Id);
-            if (reloadTurma == null) { return NotFound("Turma não encontrada."); }
-
-            return Ok(mapper.Map<TurmaDto>(reloadTurma));
+            return Ok(resultado.Dados);
         }
 
         // DELETE Turmas
@@ -113,18 +95,10 @@ namespace API.ProjetoCursosIdioma.Controllers
         [Route("{Id:Guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid Id)
         {
-            var existingTurma = await turmaRepository.GetByIdAsync(Id);
+            var resultado = await turmaService.DeleteAsync(Id);
+            if (!resultado.success) { return errorMapping(resultado); }
 
-            if (existingTurma == null) { return NotFound("Turma não encontrada."); }
-
-            var alunosCount = await turmaRepository.CountAlunosAsync(Id);
-
-            if (alunosCount > 0)
-            { return Conflict($"A turma não pode ser excluída porque possui {alunosCount} aluno(s) matriculado(s)."); }
-
-            await turmaRepository.DeleteAsync(Id);
-
-            return Ok(mapper.Map<TurmaDto>(existingTurma));
+            return NoContent();
         }
     }
 }

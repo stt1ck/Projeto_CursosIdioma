@@ -1,8 +1,11 @@
-using API.ProjetoCursosIdioma.Data;
-using API.ProjetoCursosIdioma.Mappings;
+using Infrastructure.ProjetoCursosIdioma.Data;
+using Application.ProjetoCursosIdioma.Mappings;
 using Microsoft.EntityFrameworkCore;
-using API.ProjetoCursosIdioma.Repositories;
-using API.ProjetoCursosIdioma.Models.Domain;
+using Infrastructure.ProjetoCursosIdioma.Repositories;
+using Domain.ProjetoCursosIdioma.Entities;
+using Domain.ProjetoCursosIdioma.Repositories;
+using Application.ProjetoCursosIdioma.Interfaces;
+using Application.ProjetoCursosIdioma.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +21,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PCI_DbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("PCI_ConnectionString")));
 
-builder.Services.AddScoped<API.ProjetoCursosIdioma.Repositories.AlunoRepFolder.IAlunoRepository, API.ProjetoCursosIdioma.Repositories.AlunoRepFolder.SQLAlunoRepository>();
-builder.Services.AddScoped<API.ProjetoCursosIdioma.Repositories.TurmaRepFolder.ITurmaRepository, API.ProjetoCursosIdioma.Repositories.TurmaRepFolder.SQLTurmaRepository>();
+builder.Services.AddScoped<Domain.ProjetoCursosIdioma.Repositories.IAlunoRepository, Infrastructure.ProjetoCursosIdioma.Repositories.SQLAlunoRepository>();
+builder.Services.AddScoped<Domain.ProjetoCursosIdioma.Repositories.ITurmaRepository, Infrastructure.ProjetoCursosIdioma.Repositories.SQLTurmaRepository>();
+builder.Services.AddScoped<IAlunoService, AlunoService>();
+builder.Services.AddScoped<ITurmaService, TurmaService>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 

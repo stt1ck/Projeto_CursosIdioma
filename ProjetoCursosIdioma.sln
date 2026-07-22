@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.37411.7 d17.14
+VisualStudioVersion = 17.14.37411.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.ProjetoCursosIdioma", "API.ProjetoCursosIdioma\API.ProjetoCursosIdioma.csproj", "{48994E23-09B1-41BB-9EEB-FB334EAFA8CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.ProjetoCursosIdioma", "Domain.ProjetoCursosIdioma\Domain.ProjetoCursosIdioma.csproj", "{35DF494E-7F81-4BD0-BC8B-72FFCCE73C85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.ProjetoCursosIdioma", "Infrastructure.ProjetoCursosIdioma\Infrastructure.ProjetoCursosIdioma.csproj", "{632CD50B-48E5-4F7A-9C53-3A6F03B6D43D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.ProjetoCursosIdioma", "Application.ProjetoCursosIdioma\Application.ProjetoCursosIdioma.csproj", "{D13CC7FC-EA94-4BAE-B8B7-6BE5FB27CB38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{48994E23-09B1-41BB-9EEB-FB334EAFA8CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48994E23-09B1-41BB-9EEB-FB334EAFA8CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48994E23-09B1-41BB-9EEB-FB334EAFA8CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35DF494E-7F81-4BD0-BC8B-72FFCCE73C85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35DF494E-7F81-4BD0-BC8B-72FFCCE73C85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35DF494E-7F81-4BD0-BC8B-72FFCCE73C85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35DF494E-7F81-4BD0-BC8B-72FFCCE73C85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{632CD50B-48E5-4F7A-9C53-3A6F03B6D43D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{632CD50B-48E5-4F7A-9C53-3A6F03B6D43D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{632CD50B-48E5-4F7A-9C53-3A6F03B6D43D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{632CD50B-48E5-4F7A-9C53-3A6F03B6D43D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D13CC7FC-EA94-4BAE-B8B7-6BE5FB27CB38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D13CC7FC-EA94-4BAE-B8B7-6BE5FB27CB38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D13CC7FC-EA94-4BAE-B8B7-6BE5FB27CB38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D13CC7FC-EA94-4BAE-B8B7-6BE5FB27CB38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
