@@ -7,6 +7,7 @@ O projeto foi desenvolvido utilizando uma arquitetura em camadas baseada em DDD,
 Obs.:
 - README desenvolvido com ajuda de IA para que fique melhor organizado e legível.
 - Conteúdos usados para desenvolvimento do projeto: https://www.youtube.com/playlist?list=PL_OVypi7ED9Et7fRYH8YBbybS65sBj2UE, https://learn.microsoft.com/pt-br/aspnet/core/tutorials/first-web-api?view=aspnetcore-8.0&tabs=visual-studio, https://learn.microsoft.com/pt-br/aspnet/core/tutorials/web-api-help-pages-using-swagger?view=aspnetcore-8.0, https://learn.microsoft.com/pt-br/ef/ef6/modeling/code-first/workflows/new-database, https://www.youtube.com/playlist?list=PLWXw8Gu52TRLUoUTZHQ2QaS9uKDr1i2Iw, https://www.youtube.com/watch?v=mwgNdpNN-8o&list=PLWXw8Gu52TRL1_VulHiFimF0tCxlOnW0x&index=3, https://docs.automapper.io/en/latest/, https://github.com/caelum/caelum-stella/wiki, https://learn.microsoft.com/pt-br/ef/core/, junto do uso de inteligência artificial para auxílio.
+- Com mais tempo e experiência o uso de inteligência artificial será apenas como assistente de produtividade.
 
 ## Documentação da API
 
@@ -34,6 +35,15 @@ A aplicação permite:
 - Swagger / OpenAPI
 - Caelum.Stella.CSharp
 - Git e GitHub
+
+## Integração contínua
+
+O repositório possui um workflow do GitHub Actions que restaura
+as dependências e compila a solution em modo Release utilizando
+.NET 8 em um runner Linux.
+
+O workflow valida automaticamente a compilação em pushes e pull
+requests direcionados ao branch master.
 
 ## Arquitetura
 
