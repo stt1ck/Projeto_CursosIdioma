@@ -3,8 +3,10 @@
 API REST desenvolvida em ASP.NET Core para gerenciamento de alunos, turmas, níveis de ensino e matrículas em uma empresa de cursos de idiomas.
 
 O projeto foi desenvolvido utilizando uma arquitetura em camadas baseada em DDD, Entity Framework Core com abordagem Code First, SQL Server e documentação por Swagger/OpenAPI.
-Obs.: 1.README desenvolvido com ajuda de IA para que fique melhor organizado e legível.
-      2.Conteúdos usados para desenvolvimento do projeto: https://www.youtube.com/playlist?list=PL_OVypi7ED9Et7fRYH8YBbybS65sBj2UE, https://learn.microsoft.com/pt-br/aspnet/core/tutorials/first-web-api?view=aspnetcore-8.0&tabs=visual-studio, https://learn.microsoft.com/pt-br/aspnet/core/tutorials/web-api-help-pages-using-swagger?view=aspnetcore-8.0, https://learn.microsoft.com/pt-br/ef/ef6/modeling/code-first/workflows/new-database, https://www.youtube.com/playlist?list=PLWXw8Gu52TRLUoUTZHQ2QaS9uKDr1i2Iw, https://www.youtube.com/watch?v=mwgNdpNN-8o&list=PLWXw8Gu52TRL1_VulHiFimF0tCxlOnW0x&index=3, https://docs.automapper.io/en/latest/, https://github.com/caelum/caelum-stella/wiki, https://learn.microsoft.com/pt-br/ef/core/, junto do uso de inteligência artificial para auxílio.
+
+Obs.:
+- README desenvolvido com ajuda de IA para que fique melhor organizado e legível.
+- Conteúdos usados para desenvolvimento do projeto: https://www.youtube.com/playlist?list=PL_OVypi7ED9Et7fRYH8YBbybS65sBj2UE, https://learn.microsoft.com/pt-br/aspnet/core/tutorials/first-web-api?view=aspnetcore-8.0&tabs=visual-studio, https://learn.microsoft.com/pt-br/aspnet/core/tutorials/web-api-help-pages-using-swagger?view=aspnetcore-8.0, https://learn.microsoft.com/pt-br/ef/ef6/modeling/code-first/workflows/new-database, https://www.youtube.com/playlist?list=PLWXw8Gu52TRLUoUTZHQ2QaS9uKDr1i2Iw, https://www.youtube.com/watch?v=mwgNdpNN-8o&list=PLWXw8Gu52TRL1_VulHiFimF0tCxlOnW0x&index=3, https://docs.automapper.io/en/latest/, https://github.com/caelum/caelum-stella/wiki, https://learn.microsoft.com/pt-br/ef/core/, junto do uso de inteligência artificial para auxílio.
 
 ## Documentação da API
 
