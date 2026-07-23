@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.ProjetoCursosIdioma.Entities;
 
 namespace Domain.ProjetoCursosIdioma.Repositories
 {
-    internal class INivelTurmaRepository
+    public interface INivelTurmaRepository
     {
+        Task<List<NivelTurma>> GetAllAsync();
     }
 }

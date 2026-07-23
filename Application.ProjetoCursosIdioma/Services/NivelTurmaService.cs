@@ -1,12 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.ProjetoCursosIdioma.Dto.NivelTurmaDtos;
+using Application.ProjetoCursosIdioma.Interfaces;
+using AutoMapper;
+using Domain.ProjetoCursosIdioma.Repositories;
 
 namespace Application.ProjetoCursosIdioma.Services
 {
-    internal class NivelTurmaService
+    public class NivelTurmaService : INivelTurmaService
     {
+        private readonly INivelTurmaRepository _repository;
+        private readonly IMapper _mapper;
+
+        public NivelTurmaService(INivelTurmaRepository repository, IMapper mapper)
+        {
+            this._repository = repository;
+            this._mapper = mapper;
+        }
+
+        public async Task<List<NivelTurmaDto>> GetAllAsync()
+        {
+            var niveris = await _repository.GetAllAsync();
+
+            return _mapper.Map<List<NivelTurmaDto>>(niveris);
+        }
     }
 }
