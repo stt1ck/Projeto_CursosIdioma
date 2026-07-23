@@ -28,14 +28,14 @@ namespace Application.ProjetoCursosIdioma.Services
         {
             var existingNivel = await _turmaRepository.NivelTurmaExistAsync(turmaAddRequestDto.NivelTurmaId);
             if (!existingNivel)
-            { return Resultado<TurmaDto>.Falha("Nível de turma não existe.", errorType.notFound); }
+            { return Resultado<TurmaDto>.Falha("Nível de turma não existe.", ErrorType.notFound); }
 
             var existingTurma = await _turmaRepository.TurmaExistAsync(turmaAddRequestDto.Name,
                                                                        turmaAddRequestDto.NivelTurmaId,
                                                                        turmaAddRequestDto.AnoLetivo,
                                                                        turmaAddRequestDto.NumeroTurma);
             if(existingTurma)
-            { return Resultado<TurmaDto>.Falha("Turma com mesmo 'nome', 'nível', 'ano letivo' e 'número' já existe.", errorType.conflict); }
+            { return Resultado<TurmaDto>.Falha("Turma com mesmo 'nome', 'nível', 'ano letivo' e 'número' já existe.", ErrorType.conflict); }
 
             var turma = _mapper.Map<Turma>(turmaAddRequestDto);
             turma = await _turmaRepository.CreateAsync(turma);
@@ -53,7 +53,7 @@ namespace Application.ProjetoCursosIdioma.Services
         public async Task<Resultado<TurmaDto>> GetByIdAsync(Guid Id)
         {
             var turma = await _turmaRepository.GetByIdAsync(Id);
-            if (turma == null) { return Resultado<TurmaDto>.Falha("Turma não encontrada.", errorType.notFound); }
+            if (turma == null) { return Resultado<TurmaDto>.Falha("Turma não encontrada.", ErrorType.notFound); }
 
             return Resultado<TurmaDto>.Ok(_mapper.Map<TurmaDto>(turma));
         }
@@ -62,11 +62,11 @@ namespace Application.ProjetoCursosIdioma.Services
         {
             var existingTurma = await _turmaRepository.GetByIdAsync(Id);
             if (existingTurma == null)
-            { return Resultado<TurmaDto>.Falha("Turma não encontrada.", errorType.notFound); }
+            { return Resultado<TurmaDto>.Falha("Turma não encontrada.", ErrorType.notFound); }
 
             var existingNivel = await _turmaRepository.NivelTurmaExistAsync(turmaUpdateRequestDto.NivelTurmaId);
-            if (!existingNivel == null)
-            { return Resultado<TurmaDto>.Falha("Nível de turma não existe.", errorType.notFound); }
+            if (!existingNivel)
+            { return Resultado<TurmaDto>.Falha("Nível de turma não existe.", ErrorType.notFound); }
             
             var turmaDuplicated = await _turmaRepository.TurmaExistAsync(
                                                         turmaUpdateRequestDto.Name,
@@ -75,13 +75,13 @@ namespace Application.ProjetoCursosIdioma.Services
                                                         turmaUpdateRequestDto.NumeroTurma,
                                                         Id);
             if (turmaDuplicated)
-            { return Resultado<TurmaDto>.Falha("Outra turma com o mesmo nome, nível, ano letivo e número já existe.", errorType.conflict); }
+            { return Resultado<TurmaDto>.Falha("Outra turma com o mesmo nome, nível, ano letivo e número já existe.", ErrorType.conflict); }
 
             var turma = _mapper.Map<Turma>(turmaUpdateRequestDto);
 
             var updatedTurma = await _turmaRepository.UpdateAsync(Id, turma);
             if (updatedTurma == null)
-            { return Resultado<TurmaDto>.Falha("Não foi possível atualizar a turma.", errorType.Interno); }
+            { return Resultado<TurmaDto>.Falha("Não foi possível atualizar a turma.", ErrorType.Interno); }
 
             return await ReloadTurmaAsync(Id);
         }
@@ -90,20 +90,19 @@ namespace Application.ProjetoCursosIdioma.Services
         {
             var turma = await _turmaRepository.GetByIdAsync(Id);
             if (turma == null)
-            { return Resultado<TurmaDto>.Falha("Turma não encontrada.", errorType.notFound); }
+            { return Resultado<TurmaDto>.Falha("Turma não encontrada.", ErrorType.notFound); }
 
             var alunosCount = await _turmaRepository.CountAlunosAsync(Id);
             if (alunosCount > 0)
-            { return Resultado<TurmaDto>.Falha($"A turma não pode ser excluída porque possui {alunosCount} aluno(s) matriculado(s).", errorType.conflict); }
+            { return Resultado<TurmaDto>.Falha($"A turma não pode ser excluída porque possui {alunosCount} aluno(s) matriculado(s).", ErrorType.conflict); }
 
             var turmaDto = _mapper.Map<TurmaDto>(turma);
 
-            var deletedTurma = await _turmaRepository.DeleteAsync(id);
+            var deletedTurma = await _turmaRepository.DeleteAsync(Id);
 
             if (deletedTurma == null)
-            { return Resultado<TurmaDto>.Falha("Não foi possível excluir a turma.", errorType.Interno); }
+            { return Resultado<TurmaDto>.Falha("Não foi possível excluir a turma.", ErrorType.Interno); }
 
-            await _turmaRepository.DeleteAsync(Id);
             return Resultado<TurmaDto>.Ok(turmaDto);
         }
 
@@ -111,7 +110,7 @@ namespace Application.ProjetoCursosIdioma.Services
         {
             var updatedTurma = await _turmaRepository.GetByIdAsync(turmaId);
             if (updatedTurma == null)
-            { return Resultado<TurmaDto>.Falha("A operação foi realizada, mas não foi possível recarregar os dados da turma.", errorType.Interno); }
+            { return Resultado<TurmaDto>.Falha("A operação foi realizada, mas não foi possível recarregar os dados da turma.", ErrorType.Interno); }
 
             return Resultado<TurmaDto>.Ok(_mapper.Map<TurmaDto>(updatedTurma));
         }

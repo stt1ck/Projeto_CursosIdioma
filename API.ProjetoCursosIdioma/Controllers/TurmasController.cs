@@ -1,15 +1,8 @@
 ﻿using Application.ProjetoCursosIdioma.Common;
 using Application.ProjetoCursosIdioma.Dto.TurmaDtos;
 using Application.ProjetoCursosIdioma.Interfaces;
-using Application.ProjetoCursosIdioma.Services;
-using AutoMapper;
-using Domain.ProjetoCursosIdioma.Entities;
-using Domain.ProjetoCursosIdioma.Repositories;
-using Infrastructure.ProjetoCursosIdioma.Data;
-using Infrastructure.ProjetoCursosIdioma.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace API.ProjetoCursosIdioma.Controllers
 {
@@ -27,17 +20,17 @@ namespace API.ProjetoCursosIdioma.Controllers
 
         // Métodos
         //Conversão erros Service para Https
-        private IActionResult errorMapping<T>(Resultado<T> resultado)
+        private IActionResult ErrorMapping<T>(Resultado<T> resultado)
         {
-            return resultado.errorType switch
+            return resultado.ErrorType switch
             {
-                errorType.notFound => NotFound(resultado.Mensagem),
+                ErrorType.notFound => NotFound(resultado.Mensagem),
 
-                errorType.conflict => Conflict(resultado.Mensagem),
+                ErrorType.conflict => Conflict(resultado.Mensagem),
 
-                errorType.validation => BadRequest(resultado.Mensagem),
+                ErrorType.validation => BadRequest(resultado.Mensagem),
 
-                errorType.Interno => StatusCode(StatusCodes.Status500InternalServerError, resultado.Mensagem),
+                ErrorType.Interno => StatusCode(StatusCodes.Status500InternalServerError, resultado.Mensagem),
 
                 _ => StatusCode(StatusCodes.Status500InternalServerError, "Erro inesperado.")
             };
@@ -61,7 +54,7 @@ namespace API.ProjetoCursosIdioma.Controllers
         public async Task<IActionResult> GetById([FromRoute] Guid Id)
         {
             var resultado = await turmaService.GetByIdAsync(Id);
-            if (!resultado.success) { return errorMapping(resultado); }
+            if (!resultado.Success) { return ErrorMapping(resultado); }
 
             return Ok(resultado.Dados);
         }
@@ -72,7 +65,7 @@ namespace API.ProjetoCursosIdioma.Controllers
         public async Task<IActionResult> Create([FromBody] TurmaAddRequestDto turmaAddRequestDto)
         {
             var resultado = await turmaService.CreateAsync(turmaAddRequestDto);
-            if (!resultado.success) { return errorMapping(resultado); }
+            if (!resultado.Success) { return ErrorMapping(resultado); }
 
             return CreatedAtAction(nameof(GetById), new { id = resultado.Dados!.Id }, resultado.Dados);
         }
@@ -84,7 +77,7 @@ namespace API.ProjetoCursosIdioma.Controllers
         public async Task<IActionResult> Update([FromRoute] Guid Id, [FromBody] TurmaUpdateRequestDto turmaUpdateRequestDto)
         {
             var resultado = await turmaService.UpdateAsync(Id, turmaUpdateRequestDto);
-            if (!resultado.success) { return errorMapping(resultado); }
+            if (!resultado.Success) { return ErrorMapping(resultado); }
 
             return Ok(resultado.Dados);
         }
@@ -96,7 +89,7 @@ namespace API.ProjetoCursosIdioma.Controllers
         public async Task<IActionResult> Delete([FromRoute] Guid Id)
         {
             var resultado = await turmaService.DeleteAsync(Id);
-            if (!resultado.success) { return errorMapping(resultado); }
+            if (!resultado.Success) { return ErrorMapping(resultado); }
 
             return NoContent();
         }

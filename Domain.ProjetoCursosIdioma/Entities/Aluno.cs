@@ -12,11 +12,11 @@
         public ICollection<AlunoTurma> AlunoTurmas { get; set; } = new List<AlunoTurma>();
 
         //Methods
-        public bool alreadySignedIn(Guid turmaId)
+        public bool AlreadySignedIn(Guid turmaId)
         {
             return AlunoTurmas.Any(at => at.TurmaId == turmaId);
         }
-        public bool isSignedIn()
+        public bool IsSignedIn()
         {
             return AlunoTurmas.Any();
         }

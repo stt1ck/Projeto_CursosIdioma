@@ -16,10 +16,10 @@ namespace Domain.ProjetoCursosIdioma.Entities
         public ICollection<AlunoTurma> AlunoTurmas { get; set; } = new List<AlunoTurma>();
 
         //Methods
-        public const int maxCount = 5; 
-        public bool hasAvailableSpace(int count)
+        public const int AlunoMaxLimit = 5; 
+        public bool HasAvailableSpace(int count)
         {
-            return count < maxCount;
+            return count < AlunoMaxLimit;
         }
 
     }
